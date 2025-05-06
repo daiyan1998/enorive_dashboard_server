@@ -1,0 +1,58 @@
+
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["prismaSchemaFolder"]
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+//user schema
+
+model User {
+  id  String  @id @default(uuid())
+  email String @unique
+  firstName String
+  lastName String
+  password String
+  phone String?
+  username String?
+  isEmailVerified Boolean @default(false)
+  role Role @default(USER)
+  profileImage String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum Role {
+  USER
+  ADMIN
+  MODERATOR
+}
+
+
+// product schema
+
+model Product  {
+    id String @id @default(uuid())
+    name String 
+    description String
+    price Decimal @db.Decimal(10,2)
+    stock Int
+    imageUrl String
+    isDeleted Boolean @default(false)
+    category Category @relation(fields: [categoryId], references: [id])
+    categoryId String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+}
+
+model Category {
+    id String @id @default(uuid())
+    name String @unique
+    products Product []
+}
