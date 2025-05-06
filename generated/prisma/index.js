@@ -155,12 +155,14 @@ const config = {
         "native": true
       }
     ],
-    "previewFeatures": [],
+    "previewFeatures": [
+      "prismaSchemaFolder"
+    ],
     "sourceFilePath": "C:\\Users\\Kathe\\OneDrive\\Desktop\\enorive\\enorive_dashboard_server\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": "../../.env",
+    "rootEnvPath": null,
     "schemaEnvPath": "../../.env"
   },
   "relativePath": "../../prisma",
@@ -178,8 +180,8 @@ const config = {
       }
     }
   },
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel User {\n  id              String   @id @default(uuid())\n  email           String   @unique\n  firstName       String\n  lastName        String\n  password        String\n  phone           String?\n  username        String?\n  isEmailVerified Boolean  @default(false)\n  role            Role     @default(USER)\n  profileImage    String?\n  createdAt       DateTime @default(now())\n  updatedAt       DateTime @updatedAt\n}\n\nenum Role {\n  USER\n  ADMIN\n  MODERATOR\n}\n",
-  "inlineSchemaHash": "a34c2def42550c51f324971782c7da5927ca271f7d1e623323a16e5115d97e4f",
+  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider        = \"prisma-client-js\"\n  previewFeatures = [\"prismaSchemaFolder\"]\n  output          = \"../generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel User {\n  id              String   @id @default(uuid())\n  email           String   @unique\n  firstName       String\n  lastName        String\n  password        String\n  phone           String?\n  username        String?\n  isEmailVerified Boolean  @default(false)\n  role            Role     @default(USER)\n  profileImage    String?\n  createdAt       DateTime @default(now())\n  updatedAt       DateTime @updatedAt\n}\n\nenum Role {\n  USER\n  ADMIN\n  MODERATOR\n}\n",
+  "inlineSchemaHash": "4566866295a8c4be67159cd9cde91132e6a0b13beeb0501e1929855aa89cb15f",
   "copyEngine": true
 }
 

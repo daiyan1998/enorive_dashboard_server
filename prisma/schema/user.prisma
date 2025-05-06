@@ -1,0 +1,21 @@
+
+model User {
+  id  String  @id @default(uuid())
+  email String @unique
+  firstName String
+  lastName String
+  password String
+  phone String?
+  username String?
+  isEmailVerified Boolean @default(false)
+  role Role @default(USER)
+  profileImage String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum Role {
+  USER
+  ADMIN
+  MODERATOR
+}
