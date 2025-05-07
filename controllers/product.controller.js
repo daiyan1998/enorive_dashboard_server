@@ -124,3 +124,25 @@ export const deleteProduct = async (req, res) => {
         res.status(500).json({ message: 'Something went wrong' });
     }
 }
+
+
+// search product by name
+export const searchProductByName = async (req, res) => {
+    try {
+        const { name } = req.query;
+        const products = await prisma.product.findMany({
+            where: { name: 
+                { contains: name,
+                  mode: 'insensitive',
+                 },
+                 isDeleted: false },
+                 take: 10,
+                 orderBy: { updatedAt: 'desc' },
+
+        });
+        res.status(200).json(products);
+    } catch (err) {
+        console.error('Error searching products:', err);
+        res.status(500).json({ message: 'Something went wrong' });
+    }
+}
