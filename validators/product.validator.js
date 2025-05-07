@@ -1,6 +1,6 @@
 import z from "zod";
 
-const productSchema = z.object({
+export  const productSchema = z.object({
     name: z.string().min(3).max(50),
     description: z.string().min(10),
     price: z.number().min(1).positive(),
@@ -9,4 +9,11 @@ const productSchema = z.object({
     categoryId: z.string().uuid(),    
 })
 
-export default productSchema
+
+
+
+export const productIdSchema = z.object({
+    id: z.string().uuid({ message: 'Invalid product ID format' }),
+  });
+
+ 
