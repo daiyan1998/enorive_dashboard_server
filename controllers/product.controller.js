@@ -1,3 +1,4 @@
+
 import prisma from "../lib/prisma.js";
 import {productSchema,productIdSchema} from "../validators/product.validator.js";
 
@@ -5,9 +6,8 @@ import {productSchema,productIdSchema} from "../validators/product.validator.js"
 // create a new product
 export const createProduct = async (req, res) => {
     try {
-        const { name, description, price, stock, image, categoryId } = req.body;
-     const validatedProduct =   await productSchema.parse({ name, description, price,
-         stock, image, categoryId });
+        // const { name, description, price, stock, image, categoryId } = req.body;
+     const validatedProduct =   await productSchema.parse(req.body);
         const product = await prisma.product.create({
             data: {
                 validatedProduct
@@ -70,9 +70,8 @@ export const upadeteProduct = async (req, res) => {
             return res.status(404).json({ message: 'Product not found' });
         }
 
-        const { name, description, price, stock, image, categoryId } = req.body;
-        const validatedProduct = await productSchema.partial().parse({ name, description, price,
-            stock, image, categoryId });
+        // const { name, description, price, stock, image, categoryId } = req.body;
+        const validatedProduct = await productSchema.partial().parse(req.body);
             
         const updatedProduct = await prisma.product.update({
             where: { id },

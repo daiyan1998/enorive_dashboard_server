@@ -175,9 +175,7 @@ const config = {
         "native": true
       }
     ],
-    "previewFeatures": [
-      "prismaSchemaFolder"
-    ],
+    "previewFeatures": [],
     "sourceFilePath": "C:\\Users\\Kathe\\OneDrive\\Desktop\\enorive\\enorive_dashboard_server\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
@@ -192,16 +190,17 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
         "fromEnvVar": "DATABASE_URL",
-        "value": "postgresql://postgres:123456@localhost:5432/enorive-dashboard?schema=public"
+        "value": null
       }
     }
   },
-  "inlineSchema": "generator client {\n  provider        = \"prisma-client-js\"\n  previewFeatures = [\"prismaSchemaFolder\"]\n  output          = \"../generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\n//user schema\n\nmodel User {\n  id              String   @id @default(uuid())\n  email           String   @unique\n  firstName       String\n  lastName        String\n  password        String\n  phone           String?\n  username        String?\n  isEmailVerified Boolean  @default(false)\n  role            Role     @default(USER)\n  profileImage    String?\n  createdAt       DateTime @default(now())\n  updatedAt       DateTime @updatedAt\n}\n\nenum Role {\n  USER\n  ADMIN\n  MODERATOR\n}\n\n// product schema\n\nmodel Product {\n  id          String   @id @default(uuid())\n  name        String\n  description String\n  price       Decimal  @db.Decimal(10, 2)\n  stock       Int\n  imageUrl    String\n  isDeleted   Boolean  @default(false)\n  category    Category @relation(fields: [categoryId], references: [id])\n  categoryId  String\n  createdAt   DateTime @default(now())\n  updatedAt   DateTime @updatedAt\n}\n\nmodel Category {\n  id       String    @id @default(uuid())\n  name     String    @unique\n  products Product[]\n}\n",
-  "inlineSchemaHash": "2706e45b0ffeb7a2c487439a8ae3dfbc1cf117a9f52ab688a20d379b5d2857a4",
+  "inlineSchema": "generator client {\n  provider = \"prisma-client-js\"\n  output   = \"../generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\n//user schema\n\nmodel User {\n  id              String   @id @default(uuid())\n  email           String   @unique\n  firstName       String\n  lastName        String\n  password        String\n  phone           String?\n  username        String?\n  isEmailVerified Boolean  @default(false)\n  role            Role     @default(USER)\n  profileImage    String?\n  createdAt       DateTime @default(now())\n  updatedAt       DateTime @updatedAt\n}\n\nenum Role {\n  USER\n  ADMIN\n  MODERATOR\n}\n\n// product schema\n\nmodel Product {\n  id          String   @id @default(uuid())\n  name        String\n  description String\n  price       Decimal  @db.Decimal(10, 2)\n  stock       Int\n  imageUrl    String\n  isDeleted   Boolean  @default(false)\n  category    Category @relation(fields: [categoryId], references: [id])\n  categoryId  String\n  createdAt   DateTime @default(now())\n  updatedAt   DateTime @updatedAt\n}\n\nmodel Category {\n  id       String    @id @default(uuid())\n  name     String    @unique\n  products Product[]\n}\n",
+  "inlineSchemaHash": "5fba6a0e929083bbd7564feec3fc8b979e8a60e971612fb9c683db15019015f4",
   "copyEngine": true
 }
 

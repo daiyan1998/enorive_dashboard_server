@@ -18,7 +18,7 @@ export const createCategory=async (req,res)=>{
 
         const createCategory = await prisma.category.create({
             data: {
-                validatedCategory
+                ...validatedCategory
             },
         });
 
@@ -90,11 +90,12 @@ export const deleteCategory=async(req,res)=>{
             where:{id}
         })
 
+
         if (!category) {
             return res.status(404).json({ message: 'Category not found' });
           }
-
-        const deleteCategory=await prisma.category.update({
+        //   const deleteCategory=await prisma.category.update({
+        const deleteCategory=await prisma.category.delete({
             where:{id}
         })
         res.status(200).json({
