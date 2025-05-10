@@ -161,7 +161,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "C:\\Users\\Kathe\\OneDrive\\Desktop\\enorive\\enorive_dashboard_server\\generated\\prisma",
+      "value": "C:\\Project\\enorive\\enorive_dashboard_server\\generated\\prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -177,7 +177,7 @@ const config = {
     "previewFeatures": [
       "prismaSchemaFolder"
     ],
-    "sourceFilePath": "C:\\Users\\Kathe\\OneDrive\\Desktop\\enorive\\enorive_dashboard_server\\prisma\\schema.prisma",
+    "sourceFilePath": "C:\\Project\\enorive\\enorive_dashboard_server\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
@@ -195,7 +195,7 @@ const config = {
     "db": {
       "url": {
         "fromEnvVar": "DATABASE_URL",
-        "value": "postgresql://postgres:123456@localhost:5432/enorive-dashboard?schema=public"
+        "value": "postgresql://postgres:postgres@localhost:5432/enorive-dashboard?schema=public"
       }
     }
   },
