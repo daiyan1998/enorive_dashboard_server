@@ -10,7 +10,7 @@ export const createProduct = async (req, res) => {
      const validatedProduct =   await productSchema.parse(req.body);
         const product = await prisma.product.create({
             data: {
-                validatedProduct
+                ...validatedProduct
             },
         });
         res.status(201).json(product);
@@ -58,7 +58,7 @@ export const getAllProducts = async (req, res) => {
 
 // update a product
 
-export const upadeteProduct = async (req, res) => {
+export const updateProduct = async (req, res) => {
     try {
         const { id } = productIdSchema.parse(req.params);
 
