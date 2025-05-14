@@ -1,16 +1,16 @@
+
 import prisma from "../lib/prisma.js";
-import productSchema from "../validators/product.validator.js";
+import {productSchema,productIdSchema} from "../validators/product.validator.js";
 
 
-// Create a new product
+// create a new product
 export const createProduct = async (req, res) => {
     try {
-        const { name, description, price, stock, image, categoryId } = req.body;
-     const validatedProduct =   await productSchema.parse({ name, description, price,
-         stock, image, categoryId });
+        // const { name, description, price, stock, image, categoryId } = req.body;
+     const validatedProduct =   await productSchema.parse(req.body);
         const product = await prisma.product.create({
             data: {
-                validatedProduct
+                ...validatedProduct
             },
         });
         res.status(201).json(product);
@@ -23,7 +23,7 @@ export const createProduct = async (req, res) => {
         res.status(500).json({ message: 'Something went wrong' });
       }
 };
-// Get all products
+// get all products
 export const getAllProducts = async (req, res) => {
     try {
         const products = await prisma.product.findMany({
@@ -36,19 +36,112 @@ export const getAllProducts = async (req, res) => {
     }           
 }
 
-// Get a single product by ID
-export const getProductById = async (req, res) => {
+// get a single product by ID
+// export const getProductById = async (req, res) => {
+//     try {
+//         const { id } = req.params;
+//         const product = await prisma.product.findUnique({
+//             where: { 
+//                 id,
+//                 isDeleted: false
+//              },
+//         });
+//         if (!product) {
+//             return res.status(404).json({ message: 'Product not found' });
+//         }
+//         res.status(200).json(product);
+//     } catch (err) {
+//         console.error('Error fetching product:', err);
+//         res.status(500).json({ message: 'Something went wrong' });
+//     }
+// }
+
+// update a product
+
+export const updateProduct = async (req, res) => {
     try {
-        const { id } = req.params;
-        const product = await prisma.product.findUnique({
-            where: { id },
+        const { id } = productIdSchema.parse(req.params);
+
+        const product = await prisma.product.findFirst({
+            where: { id,isDeleted: false },
         });
+
         if (!product) {
             return res.status(404).json({ message: 'Product not found' });
         }
-        res.status(200).json(product);
+
+        // const { name, description, price, stock, image, categoryId } = req.body;
+        const validatedProduct = await productSchema.partial().parse(req.body);
+            
+        const updatedProduct = await prisma.product.update({
+            where: { id },
+            data: validatedProduct,
+        });
+        res.status(200).json({
+            message: 'Product updated successfully',
+            product: updatedProduct,
+          });
+          } catch (err) {
+        if (err.name === 'ZodError') {
+          return res.status(400).json({ message: 'Validation failed', errors: err.errors });
+        }
+    
+        console.error('Error updating product:', err);
+        res.status(500).json({ message: 'Something went wrong' });
+      }
+}
+
+
+
+// delete a product
+export const deleteProduct = async (req, res) => {
+    try {
+
+
+
+        const { id } =  productIdSchema.parse(req.params);
+
+        const product = await prisma.product.findFirst({
+            where: { id,isDeleted: false },
+        });
+
+        if (!product) {
+            return res.status(404).json({ message: 'Product not found' });
+        }
+
+        const deleteProduct = await prisma.product.update({
+            where: { id },
+            data: { isDeleted: true },
+        });
+        
+        res.status(200).json({
+            message: 'Product deleted successfully',
+            product: deleteProduct,
+        });
     } catch (err) {
-        console.error('Error fetching product:', err);
+        console.error('Error deleting product:', err);
+        res.status(500).json({ message: 'Something went wrong' });
+    }
+}
+
+
+// search product by name
+export const searchProductByName = async (req, res) => {
+    try {
+        const { name } = req.query;
+        const products = await prisma.product.findMany({
+            where: { name: 
+                { contains: name,
+                  mode: 'insensitive',
+                 },
+                 isDeleted: false },
+                 take: 10,
+                 orderBy: { updatedAt: 'desc' },
+
+        });
+        res.status(200).json(products);
+    } catch (err) {
+        console.error('Error searching products:', err);
         res.status(500).json({ message: 'Something went wrong' });
     }
 }

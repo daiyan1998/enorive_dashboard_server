@@ -4,7 +4,8 @@ import express from 'express'
 
 // import routes
 import authRoute from './routes/auth.route.js'
-import ErrorHandler from './middleware/errorHandler.js'
+import categoryRoutes from './routes/category.route.js'
+import productRoutes from './routes/product.route.js'
 
 const app = express()
 const port = process.env.PORT
@@ -18,6 +19,8 @@ app.get("/", (req, res) => {
     res.send("Hello World")
 })
 
+app.use("/api/v1/categories", categoryRoutes)
+app.use("/api/v1/products", productRoutes)
 
 app.listen(port, (error) => {
     if(!error) {
