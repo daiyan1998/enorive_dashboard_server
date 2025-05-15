@@ -3,7 +3,7 @@ dotenv.config()
 import express from 'express'
 
 // import routes
-import authRoute from './routes/auth.route.js'
+import authRoute from './routes/user.route.js'
 import categoryRoutes from './routes/category.route.js'
 import productRoutes from './routes/product.route.js'
 
