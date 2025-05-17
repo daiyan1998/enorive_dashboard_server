@@ -61,8 +61,22 @@ export const loginUser = asyncHandler(async (req, res) => {
         sameSite: "strict"
     }
 
-    res.status(200).json(
-        new ApiResponse(200, {user}, "Login successful")
+    res.status(200)
+    .cookie('accessToken',accessToken,options)
+    .cookie('refreshToken',refreshToken,options)
+    .json(
+        new ApiResponse(200, {
+            user: {
+                id: user.id,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                email: user.email,
+                phone: user.phone,
+                role: user.role
+            },
+            accessToken,
+            refreshToken
+        }, "Login successful")
     )
 })
 
@@ -99,3 +113,26 @@ export const registerUser = asyncHandler(async (req, res) => {
    
 }
 )
+
+export const logoutUser = asyncHandler(async (req, res) => {
+   await prisma.user.update({
+        where: {
+            id: req.user.id
+        },
+        data: {
+            refreshToken: null
+        }
+    })
+
+    const options = {
+        httpOnly: true,
+        secure: true
+    }
+
+    return res.status(200)
+    .clearCookie("accessToken", options)
+    .clearCookie("refreshToken", options)
+    .json(
+        new ApiResponse(200, {}, "Logout successful")
+    )
+})
