@@ -39,7 +39,8 @@ model Product  {
     id String @id @default(uuid())
     name String 
     description String
-    price Decimal @db.Decimal(10,2)
+    regularPrice Decimal @db.Decimal(10,2)
+    salePrice Decimal @db.Decimal(10,2)
     stock Int
     imageUrl String
     isDeleted Boolean @default(false)
