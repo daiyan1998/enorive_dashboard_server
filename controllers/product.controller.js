@@ -1,11 +1,13 @@
 
 import prisma from "../lib/prisma.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 import {productSchema,productIdSchema} from "../validators/product.validator.js";
 
 
 // create a new product
-export const createProduct = async (req, res) => {
-    try {
+export const createProduct = asyncHandler (async (req, res) => {
+
         // const { name, description, price, stock, image, categoryId } = req.body;
      const validatedProduct =   await productSchema.parse(req.body);
         const product = await prisma.product.create({
@@ -13,28 +15,22 @@ export const createProduct = async (req, res) => {
                 ...validatedProduct
             },
         });
-        res.status(201).json(product);
-    }  catch (err) {
-        if (err.name === 'ZodError') {
-          return res.status(400).json({ message: 'Validation failed', errors: err.errors });
-        }
+        res.status(201).json(new ApiResponse(201,product, "Product created successfully"));
     
-        console.error('Error creating product:', err);
-        res.status(500).json({ message: 'Something went wrong' });
-      }
-};
+       
+      
+})
 // get all products
-export const getAllProducts = async (req, res) => {
-    try {
+export const getAllProducts = asyncHandler (async (req, res) => {
+
         const products = await prisma.product.findMany({
             where: { isDeleted: false },
         });
-        res.status(200).json(products);
-    } catch (err) {
-        console.error('Error fetching products:', err);
-        res.status(500).json({ message: 'Something went wrong' });
-    }           
-}
+        res.status(200).json(new ApiResponse(200,products, "Products found successfully"));
+  
+       
+        
+})
 
 // get a single product by ID
 // export const getProductById = async (req, res) => {
@@ -58,8 +54,9 @@ export const getAllProducts = async (req, res) => {
 
 // update a product
 
-export const updateProduct = async (req, res) => {
-    try {
+
+export const updateProduct = asyncHandler (async (req, res) => {
+    
         const { id } = productIdSchema.parse(req.params);
 
         const product = await prisma.product.findFirst({
@@ -67,7 +64,8 @@ export const updateProduct = async (req, res) => {
         });
 
         if (!product) {
-            return res.status(404).json({ message: 'Product not found' });
+
+            throw new ApiError(404, 'Product not found');
         }
 
         // const { name, description, price, stock, image, categoryId } = req.body;
@@ -77,28 +75,15 @@ export const updateProduct = async (req, res) => {
             where: { id },
             data: validatedProduct,
         });
-        res.status(200).json({
-            message: 'Product updated successfully',
-            product: updatedProduct,
-          });
-          } catch (err) {
-        if (err.name === 'ZodError') {
-          return res.status(400).json({ message: 'Validation failed', errors: err.errors });
-        }
-    
-        console.error('Error updating product:', err);
-        res.status(500).json({ message: 'Something went wrong' });
-      }
+        res.status(200).json(new ApiResponse(200,updatedProduct, "Product updated successfully"));
+     
 }
-
+)
 
 
 // delete a product
-export const deleteProduct = async (req, res) => {
-    try {
-
-
-
+export const deleteProduct = asyncHandler ( async (req, res) => {
+    
         const { id } =  productIdSchema.parse(req.params);
 
         const product = await prisma.product.findFirst({
@@ -106,28 +91,22 @@ export const deleteProduct = async (req, res) => {
         });
 
         if (!product) {
-            return res.status(404).json({ message: 'Product not found' });
+            throw new ApiError(404, 'Product not found');
+            // return res.status(404).json({ message: 'Product not found' });
         }
-
         const deleteProduct = await prisma.product.update({
             where: { id },
             data: { isDeleted: true },
         });
         
-        res.status(200).json({
-            message: 'Product deleted successfully',
-            product: deleteProduct,
-        });
-    } catch (err) {
-        console.error('Error deleting product:', err);
-        res.status(500).json({ message: 'Something went wrong' });
-    }
+        res.status(200).json(new ApiResponse(200,deleteProduct, "Product deleted successfully"));
+       
 }
-
+)
 
 // search product by name
-export const searchProductByName = async (req, res) => {
-    try {
+export const searchProductByName = asyncHandler(async (req, res) => {
+    
         const { name } = req.query;
         const products = await prisma.product.findMany({
             where: { name: 
@@ -139,9 +118,9 @@ export const searchProductByName = async (req, res) => {
                  orderBy: { updatedAt: 'desc' },
 
         });
-        res.status(200).json(products);
-    } catch (err) {
-        console.error('Error searching products:', err);
-        res.status(500).json({ message: 'Something went wrong' });
-    }
-}
+        res.status(200).json(new ApiResponse(200,products, "Products found successfully"));
+     
+
+   
+    
+})
